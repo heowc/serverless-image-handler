@@ -414,6 +414,8 @@ export class ImageHandler {
         return 'tiff';
       case ImageFormatTypes.HEIF:
         return 'heif';
+      case ImageFormatTypes.GIF:
+        return 'gif';
       case ImageFormatTypes.RAW:
         return 'raw';
       default:

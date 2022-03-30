@@ -152,6 +152,8 @@ function getContentType(filename: string): string {
     contentType = 'image/svg+xml';
   } else if (filename.endsWith('.jpg')) {
     contentType = 'image/jpeg';
+  } else if (filename.endsWith('.gif')) {
+    contentType = 'image/gif';
   } else if (filename.endsWith('.js')) {
     contentType = 'application/javascript';
   } else {

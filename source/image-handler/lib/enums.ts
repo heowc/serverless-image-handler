@@ -24,6 +24,7 @@ export enum ImageFormatTypes {
   TIFF = 'tiff',
   HEIF = 'heif',
   HEIC = 'heic',
+  GIF = 'gif',
   RAW = 'raw'
 }
 
