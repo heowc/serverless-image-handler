@@ -18,20 +18,21 @@ export class ImageHandler {
    * @returns Processed and modified image encoded as base64 string.
    */
   async process(imageRequestInfo: ImageRequestInfo): Promise<string> {
-    const { originalImage, edits } = imageRequestInfo;
+    const { originalImage, edits, contentType } = imageRequestInfo;
 
     let base64EncodedImage = '';
-
+    let animated = contentType === 'image/gif';
+    
     if (edits && Object.keys(edits).length) {
       let image: sharp.Sharp = null;
 
       if (edits.rotate !== undefined && edits.rotate === null) {
-        image = sharp(originalImage, { failOnError: false });
+        image = sharp(originalImage, { failOnError: false, animated });
       } else {
-        const metadata = await sharp(originalImage, { failOnError: false }).metadata();
+        const metadata = await sharp(originalImage, { failOnError: false, animated }).metadata();
         image = metadata.orientation
-          ? sharp(originalImage, { failOnError: false }).withMetadata({ orientation: metadata.orientation })
-          : sharp(originalImage, { failOnError: false }).withMetadata();
+          ? sharp(originalImage, { failOnError: false, animated }).withMetadata({ orientation: metadata.orientation })
+          : sharp(originalImage, { failOnError: false, animated }).withMetadata();
       }
 
       const modifiedImage = await this.applyEdits(image, edits);
