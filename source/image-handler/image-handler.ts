@@ -18,11 +18,10 @@ export class ImageHandler {
    * @returns Processed and modified image encoded as base64 string.
    */
   async process(imageRequestInfo: ImageRequestInfo): Promise<string> {
-    const { originalImage, edits, contentType } = imageRequestInfo;
+    const { originalImage, edits, animated } = imageRequestInfo;
 
     let base64EncodedImage = '';
-    let animated = contentType === 'image/gif';
-    
+
     if (edits && Object.keys(edits).length) {
       let image: sharp.Sharp = null;
 
@@ -49,7 +48,7 @@ export class ImageHandler {
     } else {
       // change output format if specified
       if (imageRequestInfo.outputFormat !== undefined) {
-        const modifiedImage = sharp(originalImage, { failOnError: false });
+        const modifiedImage = sharp(originalImage, { failOnError: false, animated });
         modifiedImage.toFormat(ImageHandler.convertImageFormatType(imageRequestInfo.outputFormat));
 
         const imageBuffer = await modifiedImage.toBuffer();
@@ -62,7 +61,7 @@ export class ImageHandler {
     // binary data need to be base64 encoded to pass to the API Gateway proxy https://docs.aws.amazon.com/apigateway/latest/developerguide/lambda-proxy-binary-media.html.
     // checks whether base64 encoded image fits in 6M limit, see https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html.
     if (base64EncodedImage.length > this.LAMBDA_PAYLOAD_LIMIT) {
-      throw new ImageHandlerError(StatusCodes.REQUEST_TOO_LONG, 'TooLargeImageException', 'The converted image is too large to return.');
+        throw new ImageHandlerError(StatusCodes.REQUEST_TOO_LONG, 'TooLargeImageException', `The converted image is too large to return. length=${base64EncodedImage.length}`);
     }
 
     return base64EncodedImage;

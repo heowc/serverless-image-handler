@@ -51,6 +51,7 @@ export interface ImageRequestInfo {
   cacheControl?: string;
   outputFormat?: ImageFormatTypes;
   reductionEffort?: number;
+  animated?: boolean;
 }
 
 export interface RekognitionCompatibleImage {

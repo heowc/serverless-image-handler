@@ -85,7 +85,7 @@ export class ImageRequest {
           }
         }
       }
-
+      imageRequestInfo.animated = originalImage.contentType === 'image/gif';
       return imageRequestInfo;
     } catch (error) {
       console.error(error);
